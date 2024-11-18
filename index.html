@@ -1,0 +1,576 @@
+<html><head><base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pian Burguer</title>
+    <style>
+    :root {
+        --primary: #ff6b01;
+        --secondary: #1a1a1a;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+        background-color: var(--secondary);
+        color: white;
+        padding-bottom: 120px;
+        position: relative;
+    }
+    
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: url('https://www.dropbox.com/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&st=5rrkqo7u&dl=1') center/300px repeat;
+        opacity: 0.3;
+    }
+    
+    .header {
+        background-color: var(--primary);
+        padding: 15px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .nav-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .nav-button {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s ease;
+    }
+    
+    .nav-button:hover {
+        background: rgba(255,255,255,0.3);
+    }
+    
+    .container {
+        padding: 10px;
+    }
+    
+    .user-info {
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: rgba(255, 107, 1, 0.1);
+        border-radius: 8px;
+    }
+    
+    .user-info input {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    
+    #addressField input {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        background: white;
+    }
+    
+    .delivery-type {
+        display: flex;
+        gap: 10px;
+        margin: 10px 0;
+        justify-content: flex-start; /* Ensures items are aligned from the start */
+    }
+    
+    .delivery-type label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+        min-width: max-content; /* Ensures labels don't wrap */
+    }
+    
+    .delivery-type input[type="radio"] {
+        cursor: pointer;
+    }
+    
+    #addressField {
+        display: none;
+        transition: all 0.3s ease;
+    }
+    
+    #addressField.show {
+        display: block;
+    }
+    
+    .menu-section {
+        margin: 15px 0;
+    }
+    
+    .menu-section h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .menu-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .menu-item {
+        background-color: rgba(255, 107, 1, 0.1);
+        padding: 12px;
+        border-radius: 8px;
+    }
+    
+    .menu-item h3 {
+        color: var(--primary);
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+    }
+    
+    .menu-item .price {
+        color: var(--primary);
+        font-weight: bold;
+        font-size: 1.1em;
+        margin: 8px 0;
+    }
+    
+    .add-ons {
+        margin: 10px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .addon-option {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9em;
+        color: #fff;
+        cursor: pointer;
+    }
+    
+    .addon-option input[type="checkbox"] {
+        cursor: pointer;
+    }
+    
+    .cart-item-addons {
+        font-size: 0.8em;
+        color: rgba(255,255,255,0.8);
+        margin-top: 2px;
+    }
+    
+    .cart-item {
+        flex-wrap: wrap;
+    }
+    
+    .cart-item > div:first-child {
+        flex: 1;
+    }
+    
+    .add-to-cart {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+    }
+    
+    .cart {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--primary);
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+        max-height: 60vh;
+        overflow-y: auto;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .cart h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 8px 0;
+        background: rgba(255,255,255,0.1);
+        padding: 8px;
+        border-radius: 4px;
+    }
+    
+    .cart-item button {
+        background: rgba(255,255,255,0.2);
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    #cart-total {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .checkout-btn {
+        background-color: white;
+        color: var(--primary);
+        border: none;
+        padding: 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    @media (max-width: 480px) {
+        .cart {
+            padding: 10px;
+        }
+        
+        .menu-item {
+            margin-bottom: 8px;
+        }
+        
+        .cart-item {
+            font-size: 0.9rem;
+        }
+    }
+    </style>
+    </head>
+    <body>
+    <div class="header">
+        <h1>Pian Burguer</h1>
+    </div>
+    
+    <div class="container">
+        <div class="user-info">
+            <h2>Seus Dados</h2>
+            <input type="text" id="userName" placeholder="Seu Nome">
+            <input type="tel" id="userPhone" placeholder="Seu Telefone">
+            <div class="delivery-type">
+                <label>
+                    <input type="radio" name="deliveryType" value="pickup" checked=""> Retirada
+                </label>
+                <label>
+                    <input type="radio" name="deliveryType" value="delivery"> Entrega
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px;">
+                    <input type="radio" name="deliveryType" value="dineIn">
+                    No Local
+                </label>
+            </div>
+            <div id="addressField">
+                <input type="text" id="userStreet" placeholder="Nome da Rua">
+                <input type="text" id="userNeighborhood" placeholder="Bairro">
+                <input type="text" id="userNumber" placeholder="Número da Casa">
+            </div>
+        </div>
+    
+        <div class="nav-buttons" style="margin: 20px 0;">
+            <button class="nav-button" onclick="scrollToSection('sandwiches-section')">Hambúrguers</button>
+            <button class="nav-button" onclick="scrollToSection('drinks-section')">Bebidas</button>
+            <button class="nav-button" onclick="scrollToSection('hotdogs-section')">Cachorro Quente</button>
+        </div>
+    
+        <div class="menu-section" id="sandwiches-section">
+            <h2>Lanches</h2>
+            <div class="menu-grid" id="sandwiches"></div>
+        </div>
+    
+        <div class="menu-section" id="drinks-section">
+            <h2>Bebidas</h2>
+            <div class="menu-grid" id="drinks"></div>
+        </div>
+    
+        <div class="menu-section" id="hotdogs-section">
+            <h2>Cachorro Quente</h2>
+            <div class="menu-grid" id="hotdogs"></div>
+        </div>
+    </div>
+    
+    <div class="cart" id="cart">
+        <h2>Carrinho</h2>
+        <div id="cart-items"></div>
+        <div id="cart-total">Total: R$ 0.00</div>
+        <button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
+    </div>
+    
+    <script>
+    const addOns = [
+        { name: "Bacon Extra", price: 7.00 },
+        { name: "Queijo Extra", price: 4.00 },
+        { name: "Ovo", price: 3.50 },
+        { name: "Azeitona", price: 1.50 },
+        { name: "Cheddar", price: 5.00 },
+        { name: "Catupiry", price: 5.00 }
+    ];
+    
+    const menuItems = {
+        sandwiches: [
+            { name: "X-Burguer", price: 16.00, description: "Hambúrguer, queijo, alface e tomate" },
+            { name: "X-Burguer Cheddar", price: 18.00, description: "Hambúrguer, queijo, Cheddar, alface e tomate" },
+            { name: "X-Monstruoso", price: 27.50, description: "Hambúrguer 150g, queijo, Catupiry, Presunto, Milho, alface e tomate" },
+            { name: "X-Chekken", price: 19.00, description: "Hambúrguer, Chekken, queijo, alface, tomate" },
+            { name: "Chekken Duplo", price: 25.00, description: "Hambúrguer 2x, Chekken 2x, queijo 2x, alface, tomate" },
+            { name: "X-Egg", price: 17.00, description: "Hambúrguer, ovo, queijo, alface, tomate" },
+            { name: "X-Burgão", price: 27.00, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
+            { name: "X-Calabresa", price: 21.00, description: "Hambúrguer, calabresa, queijo, alface" },
+            { name: "X-Salada", price: 16.00, description: "Hambúrguer, queijo, alface, tomate, cebola roxa" },
+            { name: "Maionese Verde", price: 2.50, description: "Porção de maionese verde", noAddons: true }
+        ],
+        drinks: [
+            { name: "Roller 2L", price: 8.50, description: "2 litros" },
+            { name: "Coca-Cola 200ml", price: 3.00, description: "200ml" },
+            { name: "Frupic", price: 4.50, description: "Laranja e Frutas Vermelhas" }
+        ],
+        hotdogs: [
+            { name: "Hot Dog Simples", price: 12.00, description: "Salsicha, tomate, batata palha, milho e ervilha" },
+            { name: "Hot Dog Completo", price: 15.00, description: "Salsicha, tomate, batata palha, milho, ervilha, bacon e catupiry" },
+            { name: "Hot Dog Duplo", price: 18.00, description: "2 Salsichas, tomate, batata palha, milho, ervilha e catupiry" }
+        ]
+    };
+    
+    let cart = [];
+    let deliveryFee = 0;
+    
+    function displayMenuItems() {
+        const sandwichesContainer = document.getElementById('sandwiches');
+        const drinksContainer = document.getElementById('drinks');
+        const hotdogsContainer = document.getElementById('hotdogs');
+    
+        menuItems.sandwiches.forEach(item => {
+            sandwichesContainer.innerHTML += createMenuItem(item);
+        });
+    
+        menuItems.drinks.forEach(item => {
+            drinksContainer.innerHTML += createMenuItem(item);
+        });
+    
+        menuItems.hotdogs.forEach(item => {
+            hotdogsContainer.innerHTML += createMenuItem(item);
+        });
+    }
+    
+    function createMenuItem(item) {
+        const addOnsHtml = menuItems.sandwiches.some(sandwich => sandwich.name === item.name) && !item.noAddons
+            ? `<div class="add-ons">
+                ${addOns.map((addon, idx) => `
+                    <label class="addon-option">
+                        <input type="checkbox" data-addon="${addon.name}" data-price="${addon.price}">
+                        ${addon.name} (+R$ ${addon.price.toFixed(2)})
+                    </label>
+                `).join('')}
+               </div>`
+            : '';
+    
+        return `
+            <div class="menu-item">
+                <h3>${item.name}</h3>
+                <p>${item.description}</p>
+                <div class="price">R$ ${item.price.toFixed(2)}</div>
+                ${addOnsHtml}
+                <button class="add-to-cart" onclick="addToCart('${item.name}', ${item.price}, this)">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+        `;
+    }
+    
+    function addToCart(name, price, buttonElement) {
+        const menuItem = buttonElement.closest('.menu-item');
+        const selectedAddons = Array.from(menuItem.querySelectorAll('.addon-option input:checked')).map(checkbox => ({
+            name: checkbox.dataset.addon,
+            price: parseFloat(checkbox.dataset.price)
+        }));
+        
+        cart.push({
+            name,
+            price,
+            addons: selectedAddons
+        });
+        
+        menuItem.querySelectorAll('.addon-option input').forEach(checkbox => checkbox.checked = false);
+        
+        updateCart();
+    }
+    
+    function updateCart() {
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        let total = 0;
+    
+        cartItems.innerHTML = '';
+        cart.forEach((item, index) => {
+            let itemTotal = item.price;
+            let addonsText = '';
+            
+            if (item.addons && item.addons.length > 0) {
+                addonsText = '<div class="cart-item-addons">';
+                item.addons.forEach(addon => {
+                    itemTotal += addon.price;
+                    addonsText += `<div>+ ${addon.name} (R$ ${addon.price.toFixed(2)})</div>`;
+                });
+                addonsText += '</div>';
+            }
+            
+            total += itemTotal;
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <div>
+                        <span>${item.name}</span>
+                        ${addonsText}
+                    </div>
+                    <span>R$ ${itemTotal.toFixed(2)}</span>
+                    <button onclick="removeFromCart(${index})">X</button>
+                </div>
+            `;
+        });
+    
+        const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+        if (deliveryType === 'delivery') {
+            deliveryFee = 5.00;
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <span>Taxa de Entrega</span>
+                    <span>R$ ${deliveryFee.toFixed(2)}</span>
+                </div>
+            `;
+            total += deliveryFee;
+        } else {
+            deliveryFee = 0;
+        }
+    
+        cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+    }
+    
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+    
+    document.querySelectorAll('input[name="deliveryType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const addressField = document.getElementById('addressField');
+            if (this.value === 'delivery') {
+                addressField.classList.add('show');
+            } else {
+                addressField.classList.remove('show');
+            }
+            updateCart();
+        });
+    });
+    
+    function checkout() {
+        const name = document.getElementById('userName').value;
+        const phone = document.getElementById('userPhone').value;
+        const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+        const street = document.getElementById('userStreet').value;
+        const neighborhood = document.getElementById('userNeighborhood').value;
+        const number = document.getElementById('userNumber').value;
+    
+        if (!name || !phone) {
+            alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
+            return;
+        }
+    
+        if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
+            alert('Por favor, preencha todos os campos do endereço para entrega.');
+            return;
+        }
+    
+        let message = `Olá! Novo pedido:\n\nCliente: ${name}\nTelefone: ${phone}\n`;
+        message += `Tipo: ${
+            deliveryType === 'delivery' ? 'Entrega' : 
+            deliveryType === 'dineIn' ? 'No Local' : 
+            'Retirada'
+        }\n`;
+        
+        if (deliveryType === 'delivery') {
+            message += `Endereço: ${street}, ${number} - ${neighborhood}\n`;
+        }
+        message += `\nPedido:\n`;
+        
+        let total = 0;
+    
+        cart.forEach(item => {
+            let itemTotal = item.price;
+            message += `${item.name} - R$ ${item.price.toFixed(2)}\n`;
+            
+            if (item.addons && item.addons.length > 0) {
+                item.addons.forEach(addon => {
+                    message += `  + ${addon.name} - R$ ${addon.price.toFixed(2)}\n`;
+                    itemTotal += addon.price;
+                });
+            }
+            
+            total += itemTotal;
+        });
+    
+        if (deliveryType === 'delivery') {
+            message += `Taxa de Entrega - R$ ${deliveryFee.toFixed(2)}\n`;
+            total += deliveryFee;
+        }
+    
+        message += `\nTotal: R$ ${total.toFixed(2)}`;
+        
+        const encodedMessage = encodeURIComponent(message);
+        window.open(`https://wa.me/5517992095122?text=${encodedMessage}`);
+    }
+    
+    function scrollToSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const headerOffset = 80;
+        const elementPosition = section.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+        });
+    }
+    
+    displayMenuItems();
+    </script>
+    
+    </body></html>
