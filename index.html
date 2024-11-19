@@ -1,10 +1,18 @@
 <html><head><base href="/">
+    <!-- Add Font Awesome CDN in the <head> section -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pian Burguer</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Sistema Pedido | Delivery WhatsApp</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="https:///1312/logos/logo-6616b4b810229.jpg">
+    <link rel="apple-touch-icon" href="https:///logos/logo-6616b4b810229.jpg">
+    <link rel="apple-touch-startup-image" href="https:///1312/logos/logo-6616b4b810229.jpg">
     <style>
     :root {
-        --primary: #ff6b01;
+        --primary: #ff0000; /* Changed from #ff6b01 to #ff0000 (red) */
         --secondary: #1a1a1a;
     }
     
@@ -31,38 +39,65 @@
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: url('https://www.dropbox.com/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&st=5rrkqo7u&dl=1') center/300px repeat;
+        background: url('https://www.dropbox.co/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&st=5rrkqo7u&dl=1') center/300px repeat;
         opacity: 0.3;
     }
     
     .header {
+        display: flex;
+        justify-content: space-between; /* Changed from center to space-between */
+        align-items: center;
+        gap: 10px;
         background-color: var(--primary);
         padding: 15px;
-        text-align: center;
         position: sticky;
         top: 0;
         z-index: 100;
     }
     
+    .header > div:first-child {
+        flex: 1;
+    }
+
     .header h1 {
         font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .status-box {
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        font-weight: bold;
+    }
+
+    .status-box.open {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-box.closed {
+        background-color: #dc3545;
+        color: white;
     }
     
     .nav-buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Change to 3 columns */
+        gap: 8px;
+        padding: 0 10px;
+        margin: 15px 0; /* Reduced margin */
     }
     
     .nav-button {
-        background: rgba(255,255,255,0.2);
+        width: 100%;
+        font-size: 13px; /* Smaller font */
+        padding: 6px 4px; /* Reduced padding */
+        background: rgba(255,255,255,0.15);
         border: none;
         color: white;
-        padding: 8px 16px;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 14px;
         transition: background 0.3s ease;
     }
     
@@ -77,7 +112,7 @@
     .user-info {
         margin-bottom: 15px;
         padding: 15px;
-        background-color: rgba(255, 107, 1, 0.1);
+        background-color: rgba(255, 0, 0, 0.1);
         border-radius: 8px;
     }
     
@@ -102,17 +137,27 @@
     
     .delivery-type {
         display: flex;
-        gap: 10px;
-        margin: 10px 0;
-        justify-content: flex-start; /* Ensures items are aligned from the start */
+        flex-wrap: wrap;
+        gap: 15px;
+        margin: 15px 0;
+        padding: 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
     }
     
     .delivery-type label {
         display: flex;
         align-items: center;
-        gap: 5px;
-        cursor: pointer;
-        min-width: max-content; /* Ensures labels don't wrap */
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        transition: background 0.3s ease;
+        min-width: 80px;
+    }
+    
+    .delivery-type label:hover {
+        background: rgba(255,255,255,0.2);
     }
     
     .delivery-type input[type="radio"] {
@@ -126,6 +171,74 @@
     
     #addressField.show {
         display: block;
+    }
+    
+    .payment-type {
+        margin: 20px 0;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+    }
+    
+    .payment-type h3 {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: var(--primary);
+    }
+    
+    .payment-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-start;  /* Updated to flex */
+    }
+    
+    .payment-type label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;  /* Reduced padding */
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        transition: background 0.3s ease;
+        font-size: 14px;  /* Match font size with delivery type */
+        min-width: 80px;  /* Add minimum width */
+    }
+    
+    .payment-type label:hover {
+        background: rgba(255,255,255,0.2);
+    }
+    
+    #pixField {
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        text-align: center;
+    }
+    
+    #pixField p {
+        font-size: 1.1em;
+        color: var(--primary);
+    }
+    
+    #changeField {
+        display: none;
+        margin-top: 15px;
+        padding: 15px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+    }
+    
+    #changeField input {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        background: white;
     }
     
     .menu-section {
@@ -144,7 +257,7 @@
     }
     
     .menu-item {
-        background-color: rgba(255, 107, 1, 0.1);
+        background-color: rgba(255, 0, 0, 0.1);
         padding: 12px;
         border-radius: 8px;
     }
@@ -263,7 +376,30 @@
         font-weight: bold;
     }
     
+    .store-status {
+        text-align: center;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    
+    button:disabled {
+        cursor: not-allowed !important;
+    }
+    
     @media (max-width: 480px) {
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 0 10px;
+        }
+        
+        .nav-button {
+            width: 100%;
+            font-size: 13px;
+            padding: 8px 4px;
+        }
+        
         .cart {
             padding: 10px;
         }
@@ -276,11 +412,79 @@
             font-size: 0.9rem;
         }
     }
+
+    /* Add some CSS to style the phone icons */
+    .header .fa-phone {
+        color: white;
+        margin-right: 5px;
+    }
+
+    /* Add styles for the menu button and dropdown */
+    .menu-button {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px; /* Smaller size */
+        height: 40px; /* Smaller size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        z-index: 1000;
+    }
+
+    .quick-nav {
+        position: fixed;
+        bottom: 140px;
+        right: 20px;
+        background-color: var(--secondary); /* Change background color */
+        border-radius: 8px;
+        padding: 8px; /* Reduced padding */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        display: none;
+        flex-direction: column;
+        gap: 4px; /* Reduced gap */
+        z-index: 1000;
+    }
+
+    .quick-nav.show {
+        display: flex;
+    }
+
+    .quick-nav button {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 6px 12px; /* Reduced padding */
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px; /* Smaller font */
+        white-space: nowrap;
+        width: 120px; /* Fixed width */
+        text-align: center;
+    }
+
+    .quick-nav button:hover {
+        opacity: 0.9;
+    }
     </style>
     </head>
     <body>
     <div class="header">
-        <h1>Pian Burguer</h1>
+        <div>
+            <h1>(Nome Estabelecimento)</h1>
+            <p style="font-size: 0.8rem; margin-top: 5px;">Nos Encontre: (Endereço), (numero) - (Bairro) (Cidade, SP)</p>
+            <p style="font-size: 0.8rem; margin-top: 5px;">
+                <i class="fas fa-phone"></i> (17)99999-9999 &nbsp;&nbsp; 
+                <i class="fas fa-phone"></i> (17)99999-9999
+            </p>
+        </div>
+        <div class="status-box open">ABERTO</div>
     </div>
     
     <div class="container">
@@ -297,7 +501,7 @@
                 </label>
                 <label style="display: flex; align-items: center; gap: 5px;">
                     <input type="radio" name="deliveryType" value="dineIn">
-                    No Local
+                    Mesa
                 </label>
             </div>
             <div id="addressField">
@@ -305,12 +509,42 @@
                 <input type="text" id="userNeighborhood" placeholder="Bairro">
                 <input type="text" id="userNumber" placeholder="Número da Casa">
             </div>
+            <div class="payment-type">
+                <h3 style="color: white;">Forma de Pagamento</h3>
+                <div class="payment-options">
+                    <label>
+                        <input type="radio" name="paymentType" value="debit" checked>
+                        Débito
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="credit">
+                        Crédito
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="money">
+                        Dinheiro
+                    </label>
+                    <label>
+                        <input type="radio" name="paymentType" value="pix">
+                        PIX
+                    </label>
+                </div>
+                <div id="pixField" style="display: none;">
+                    <p style="color: white;">Chave PIX: 17992095122</p>
+                </div>
+                <div id="changeField" style="display: none;">
+                    <input type="number" id="changeAmount" placeholder="Troco Para Quanto?">
+                </div>
+            </div>
         </div>
     
-        <div class="nav-buttons" style="margin: 20px 0;">
-            <button class="nav-button" onclick="scrollToSection('sandwiches-section')">Hambúrguers</button>
+        <div class="nav-buttons" style="margin: 15px 0;">
+            <button class="nav-button" onclick="scrollToSection('sandwiches-section')">Hamburguer</button>
+            <button class="nav-button" onclick="scrollToSection('hotdogs-section')">Hotdog</button>
             <button class="nav-button" onclick="scrollToSection('drinks-section')">Bebidas</button>
-            <button class="nav-button" onclick="scrollToSection('hotdogs-section')">Cachorro Quente</button>
+            <button class="nav-button" onclick="scrollToSection('juices-section')">Sucos</button>
+            <button class="nav-button" onclick="scrollToSection('portions-section')">Porções</button>
+            <button class="nav-button" onclick="scrollToSection('beef-section')">Carne de Vaca</button>
         </div>
     
         <div class="menu-section" id="sandwiches-section">
@@ -318,14 +552,29 @@
             <div class="menu-grid" id="sandwiches"></div>
         </div>
     
+        <div class="menu-section" id="hotdogs-section">
+            <h2>Cachorro Quente</h2>
+            <div class="menu-grid" id="hotdogs"></div>
+        </div>
+    
         <div class="menu-section" id="drinks-section">
             <h2>Bebidas</h2>
             <div class="menu-grid" id="drinks"></div>
         </div>
-    
-        <div class="menu-section" id="hotdogs-section">
-            <h2>Cachorro Quente</h2>
-            <div class="menu-grid" id="hotdogs"></div>
+
+        <div class="menu-section" id="juices-section">
+            <h2>Sucos</h2>
+            <div class="menu-grid" id="juices"></div>
+        </div>
+
+        <div class="menu-section" id="portions-section">
+            <h2>Porções</h2>
+            <div class="menu-grid" id="portions"></div>
+        </div>
+
+        <div class="menu-section" id="beef-section">
+            <h2>Carne de Vaca</h2>
+            <div class="menu-grid" id="beef"></div>
         </div>
     </div>
     
@@ -335,29 +584,148 @@
         <div id="cart-total">Total: R$ 0.00</div>
         <button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
     </div>
+
+    <button class="menu-button" onclick="toggleQuickNav()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="quick-nav" id="quickNav">
+        <button onclick="scrollToSection('sandwiches-section')">Lanches</button>
+        <button onclick="scrollToSection('hotdogs-section')">Cachorro Quente</button>
+        <button onclick="scrollToSection('drinks-section')">Bebidas</button>
+        <button onclick="scrollToSection('juices-section')">Sucos</button>
+        <button onclick="scrollToSection('portions-section')">Porções</button>
+        <button onclick="scrollToSection('beef-section')">Carne de Vaca</button>
+    </div>
     
     <script>
+    let orderCounter = 0;
+
+    async function loadOrderCounter() {
+        try {
+            const response = await fetch('/orderCounter.txt');
+            if (response.ok) {
+                const count = await response.text();
+                orderCounter = parseInt(count) || 0;
+            }
+        } catch (error) {
+            console.log('Could not load counter, starting from 0');
+            orderCounter = 0;
+        }
+    }
+
+    async function saveOrderCounter() {
+        try {
+            const response = await fetch('/saveCounter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ counter: orderCounter })
+            });
+            
+            if (!response.ok) {
+                console.error('Failed to save counter');
+            }
+        } catch (error) {
+            console.error('Error saving counter:', error);
+        }
+    }
+
+    const storeHours = {
+        0: { open: '18:00', close: '23:00' }, // domingo
+        1: { open: '18:00', close: '23:00' }, // segunda
+        2: { open: '00:00', close: '21:00' }, // terça
+        3: { open: '18:00', close: '21:00' }, // quarta
+        4: { open: '18:00', close: '21:00' }, // quinta
+        5: { open: '18:00', close: '21:00' }, // sexta
+        6: { open: '18:00', close: '21:00' }  // sabado
+    };
+
+    function isStoreOpen() {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const currentTime = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
+        
+        // Get schedule for current day
+        const todaySchedule = storeHours[dayOfWeek];
+        
+        // Convert times to comparable values
+        const nowMinutes = (now.getHours() * 60) + now.getMinutes();
+        const openMinutes = parseInt(todaySchedule.open.split(':')[0]) * 60 + parseInt(todaySchedule.open.split(':')[1]);
+        const closeMinutes = parseInt(todaySchedule.close.split(':')[0]) * 60 + parseInt(todaySchedule.close.split(':')[1]);
+        
+        return nowMinutes >= openMinutes && nowMinutes <= closeMinutes;
+    }
+
+    function updateStoreStatus() {
+        const header = document.querySelector('.header');
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        const addToCartBtns = document.querySelectorAll('.add-to-cart');
+        
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const todaySchedule = storeHours[dayOfWeek];
+        
+        const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+        const today = daysOfWeek[dayOfWeek];
+
+        // Remove existing status elements
+        const existingStatus = header.querySelector('.status-box');
+        if (existingStatus) {
+            existingStatus.remove();
+        }
+        
+        // Create new status box
+        const statusBox = document.createElement('div');
+        statusBox.className = `status-box ${isStoreOpen() ? 'open' : 'closed'}`;
+        statusBox.textContent = isStoreOpen() ? 'ABERTO' : 'FECHADO';
+        header.appendChild(statusBox);
+        
+        if (!isStoreOpen()) {
+            // Disable checkout and add to cart buttons
+            checkoutBtn.disabled = true;
+            checkoutBtn.style.opacity = '0.5';
+            addToCartBtns.forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = '0.5';
+            });
+        } else {
+            // Enable checkout and add to cart buttons
+            checkoutBtn.disabled = false;
+            checkoutBtn.style.opacity = '1';
+            addToCartBtns.forEach(btn => {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            });
+        }
+    }
+
+    // Add this to the end of the displayMenuItems function
+    setInterval(updateStoreStatus, 60000); // Check every minute
+    updateStoreStatus(); // Initial check
+
     const addOns = [
         { name: "Bacon Extra", price: 7.00 },
         { name: "Queijo Extra", price: 4.00 },
         { name: "Ovo", price: 3.50 },
         { name: "Azeitona", price: 1.50 },
         { name: "Cheddar", price: 5.00 },
-        { name: "Catupiry", price: 5.00 }
+        { name: "Catupiry", price: 5.00 },
+        { name: "Maionese Verde", price: 2.50 } // Added here
     ];
     
     const menuItems = {
         sandwiches: [
-            { name: "X-Burguer", price: 16.00, description: "Hambúrguer, queijo, alface e tomate" },
-            { name: "X-Burguer Cheddar", price: 18.00, description: "Hambúrguer, queijo, Cheddar, alface e tomate" },
-            { name: "X-Monstruoso", price: 27.50, description: "Hambúrguer 150g, queijo, Catupiry, Presunto, Milho, alface e tomate" },
-            { name: "X-Chekken", price: 19.00, description: "Hambúrguer, Chekken, queijo, alface, tomate" },
-            { name: "Chekken Duplo", price: 25.00, description: "Hambúrguer 2x, Chekken 2x, queijo 2x, alface, tomate" },
-            { name: "X-Egg", price: 17.00, description: "Hambúrguer, ovo, queijo, alface, tomate" },
-            { name: "X-Burgão", price: 27.00, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
-            { name: "X-Calabresa", price: 21.00, description: "Hambúrguer, calabresa, queijo, alface" },
-            { name: "X-Salada", price: 16.00, description: "Hambúrguer, queijo, alface, tomate, cebola roxa" },
-            { name: "Maionese Verde", price: 2.50, description: "Porção de maionese verde", noAddons: true }
+            { name: "X-Big Dog", price: 16.00, description: "Pão, hambúrguer artesanal, queijo mussarela, maionese, alface e tomate" },
+            { name: "X-Bacon Dog", price: 18.00, description: "Pão, hambúrguer artesanal, bacon, queijo mussarela, maionese, alface e tomate" },
+            { name: "X-Tudo Dog", price: 27.50, description: "Pão, 2 hambúrgueres artesanais, bacon, queijo mussarela, ovo, calabresa, maionese, alface e tomate" },
+            { name: "X-Frango Dog", price: 19.00, description: "Pão, peito de frango grelhado, queijo mussarela, maionese, alface e tomate" },
+            { name: "X-Frango Duplo", price: 25.00, description: "Pão, 2 filés de frango grelhado, queijo mussarela duplo, maionese, alface e tomate" },
+            { name: "X-Egg Dog", price: 17.00, description: "Pão, hambúrguer artesanal, ovo, queijo mussarela, maionese, alface e tomate" },
+            { name: "X-Big Duplo", price: 27.00, description: "Pão, 2 hambúrgueres artesanais, queijo mussarela duplo, maionese, alface e tomate" },
+            { name: "X-Calabresa Dog", price: 21.00, description: "Pão, hambúrguer artesanal, calabresa, queijo mussarela, maionese, alface" },
+            { name: "X-Salada Dog", price: 16.00, description: "Pão, hambúrguer artesanal, queijo mussarela, maionese, alface, tomate, cebola roxa e pepino" }
         ],
         drinks: [
             { name: "Roller 2L", price: 8.50, description: "2 litros" },
@@ -368,6 +736,24 @@
             { name: "Hot Dog Simples", price: 12.00, description: "Salsicha, tomate, batata palha, milho e ervilha" },
             { name: "Hot Dog Completo", price: 15.00, description: "Salsicha, tomate, batata palha, milho, ervilha, bacon e catupiry" },
             { name: "Hot Dog Duplo", price: 18.00, description: "2 Salsichas, tomate, batata palha, milho, ervilha e catupiry" }
+        ],
+        juices: [
+            { name: "Suco de Laranja", price: 8.00, description: "Natural, 500ml" },
+            { name: "Suco de Abacaxi", price: 8.00, description: "Natural, 500ml" },
+            { name: "Suco de Maracujá", price: 8.00, description: "Natural, 500ml" },
+            { name: "Suco de Morango", price: 9.00, description: "Natural, 500ml" }
+        ],
+        portions: [
+            { name: "Batata Frita", price: 25.00, description: "Porção grande com cheddar e bacon" },
+            { name: "Calabresa Acebolada", price: 30.00, description: "Porção grande" },
+            { name: "Frango a Passarinho", price: 35.00, description: "500g" },
+            { name: "Mandioca Frita", price: 25.00, description: "Porção grande" }
+        ],
+        beef: [
+            { name: "Contra Filé", price: 45.00, description: "Grelhado com arroz e fritas" },
+            { name: "Picanha", price: 55.00, description: "Grelhada com arroz e fritas" },
+            { name: "Maminha", price: 48.00, description: "Grelhada com arroz e fritas" },
+            { name: "Alcatra", price: 45.00, description: "Grelhada com arroz e fritas" }
         ]
     };
     
@@ -378,6 +764,9 @@
         const sandwichesContainer = document.getElementById('sandwiches');
         const drinksContainer = document.getElementById('drinks');
         const hotdogsContainer = document.getElementById('hotdogs');
+        const juicesContainer = document.getElementById('juices');
+        const portionsContainer = document.getElementById('portions');
+        const beefContainer = document.getElementById('beef');
     
         menuItems.sandwiches.forEach(item => {
             sandwichesContainer.innerHTML += createMenuItem(item);
@@ -389,6 +778,18 @@
     
         menuItems.hotdogs.forEach(item => {
             hotdogsContainer.innerHTML += createMenuItem(item);
+        });
+
+        menuItems.juices.forEach(item => {
+            juicesContainer.innerHTML += createMenuItem(item);
+        });
+
+        menuItems.portions.forEach(item => {
+            portionsContainer.innerHTML += createMenuItem(item);
+        });
+
+        menuItems.beef.forEach(item => {
+            beefContainer.innerHTML += createMenuItem(item);
         });
     }
     
@@ -482,6 +883,12 @@
         }
     
         cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+        
+        // Trigger change recalculation
+        const changeAmount = document.getElementById('changeAmount');
+        if (changeAmount && changeAmount.value) {
+            updateChangeDisplay(total);
+        }
     }
     
     function removeFromCart(index) {
@@ -501,13 +908,52 @@
         });
     });
     
+    document.querySelectorAll('input[name="paymentType"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            const pixField = document.getElementById('pixField');
+            const changeField = document.getElementById('changeField');
+            
+            pixField.style.display = this.value === 'pix' ? 'block' : 'none';
+            changeField.style.display = this.value === 'money' ? 'block' : 'none';
+        });
+    });
+    
+    function calculateChange(total, amountGiven) {
+        if (amountGiven < total) {
+            return null;
+        }
+        return amountGiven - total;
+    }
+
+    document.getElementById('changeAmount').addEventListener('input', function() {
+        const cartTotal = cart.reduce((sum, item) => {
+            let itemTotal = item.price;
+            if (item.addons) {
+                itemTotal += item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
+            }
+            return sum + itemTotal;
+        }, 0) + deliveryFee;
+
+        updateChangeDisplay(cartTotal);
+    });
+    
     function checkout() {
+        if (!isStoreOpen()) {
+            alert(`Estamos fechados no momento!\nHorário de funcionamento: ${storeHours[dayOfWeek].open} às ${storeHours[dayOfWeek].close}`);
+            return;
+        }
+        
+        // Increment order counter and save
+        orderCounter++;
+        saveOrderCounter();
+        
         const name = document.getElementById('userName').value;
         const phone = document.getElementById('userPhone').value;
         const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
         const street = document.getElementById('userStreet').value;
         const neighborhood = document.getElementById('userNeighborhood').value;
         const number = document.getElementById('userNumber').value;
+        const paymentType = document.querySelector('input[name="paymentType"]:checked').value;
     
         if (!name || !phone) {
             alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
@@ -519,40 +965,72 @@
             return;
         }
     
-        let message = `Olá! Novo pedido:\n\nCliente: ${name}\nTelefone: ${phone}\n`;
-        message += `Tipo: ${
-            deliveryType === 'delivery' ? 'Entrega' : 
-            deliveryType === 'dineIn' ? 'No Local' : 
-            'Retirada'
-        }\n`;
-        
-        if (deliveryType === 'delivery') {
-            message += `Endereço: ${street}, ${number} - ${neighborhood}\n`;
-        }
-        message += `\nPedido:\n`;
-        
-        let total = 0;
+        // Get current date and time
+        const now = new Date();
+        const dateStr = now.toLocaleDateString();
+        const timeStr = now.toLocaleTimeString();
     
+        // Add order number to the message
+        let message = `🔔 *Pedido #${orderCounter}* (${dateStr} - ${timeStr})\n`;
+        message += `------------------------\n`;
+        
+        let subTotal = 0;
+    
+        // List items
         cart.forEach(item => {
             let itemTotal = item.price;
-            message += `${item.name} - R$ ${item.price.toFixed(2)}\n`;
+            message += `*${item.name}*\n`;
             
             if (item.addons && item.addons.length > 0) {
                 item.addons.forEach(addon => {
-                    message += `  + ${addon.name} - R$ ${addon.price.toFixed(2)}\n`;
+                    message += `   • ${addon.name} (+R$ ${addon.price.toFixed(2)})\n`;
                     itemTotal += addon.price;
                 });
             }
             
-            total += itemTotal;
+            message += `*Valor:* R$ ${itemTotal.toFixed(2)}\n`;
+            message += `------------------------\n`;
+            subTotal += itemTotal;
         });
     
+        let total = subTotal;
+        
+        message += `*Sub Total:* R$ ${subTotal.toFixed(2)}\n`;
+        
         if (deliveryType === 'delivery') {
-            message += `Taxa de Entrega - R$ ${deliveryFee.toFixed(2)}\n`;
             total += deliveryFee;
+            message += `*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}\n`;
         }
+        
+        message += `*Total:* R$ ${total.toFixed(2)}\n`;
+        message += `*Forma de pagto:* ${
+            paymentType === 'money' ? 'Dinheiro' :
+            paymentType === 'debit' ? 'Cartão de Débito' :
+            paymentType === 'credit' ? 'Cartão de Crédito' :
+            'PIX'
+        }\n`;
+        
+        if (paymentType === 'money') {
+            const changeAmount = document.getElementById('changeAmount').value;
+            if (changeAmount) {
+                const change = calculateChange(total, parseFloat(changeAmount));
+                message += `*Troco para:* R$ ${parseFloat(changeAmount).toFixed(2)}\n`;
+                message += `*Troco a devolver:* R$ ${change.toFixed(2)}\n`;
+            }
+        }
+        
+        message += `------------------------\n`;
+        message += `*Tipo:* ${
+            deliveryType === 'delivery' ? 'Entrega' : 
+            deliveryType === 'dineIn' ? 'Comer No Local' : 
+            'Retirada'
+        }\n`;
     
-        message += `\nTotal: R$ ${total.toFixed(2)}`;
+        if (deliveryType === 'delivery') {
+            message += `*Endereço:* ${street}, ${number} - ${neighborhood}\n`;
+        }
+        message += `\n👤 *Cliente:* ${name}\n`;
+        message += `📲 *Telefone:* ${phone}`;
         
         const encodedMessage = encodeURIComponent(message);
         window.open(`https://wa.me/5517992095122?text=${encodedMessage}`);
@@ -569,8 +1047,39 @@
             behavior: "smooth"
         });
     }
+
+    function toggleQuickNav() {
+        const quickNav = document.getElementById('quickNav');
+        quickNav.classList.toggle('show');
+    }
+
+    // Close quick nav when clicking outside
+    document.addEventListener('click', function(event) {
+        const quickNav = document.getElementById('quickNav');
+        const menuButton = document.querySelector('.menu-button');
+        
+        if (!quickNav.contains(event.target) && !menuButton.contains(event.target)) {
+            quickNav.classList.remove('show');
+        }
+    });
     
     displayMenuItems();
+    document.addEventListener('DOMContentLoaded', loadOrderCounter);
+
+    // Block Ctrl+U and view source
+    document.addEventListener('keydown', function(event) {
+        // Check if Ctrl key is pressed (and Command key for Mac)
+        if ((event.ctrlKey || event.metaKey) && event.key === 'u') {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    // Additional protection against view source
+    document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        return false;
+    });
     </script>
     
     </body></html>
